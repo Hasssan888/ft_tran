@@ -1,60 +1,89 @@
-import { Button } from "@/components/ui/button"
-import { Play } from "lucide-react"
-
-export default function Hero() {
-  return (
-    <section className="min-h-screen pt-24 pb-20 flex items-center relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-80 h-80 bg-primary/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-secondary/20 rounded-full blur-3xl"></div>
+<footer class="bg-card/50 border-t border-primary/20 py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <div class="grid md:grid-cols-4 gap-8 mb-12">
+      <!-- Branding -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-sm">
+            🏓
+          </div>
+          <span class="font-bold text-foreground">PingPong Arena</span>
+        </div>
+        <p class="text-muted-foreground text-sm">
+          The ultimate competitive ping pong platform.
+        </p>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
-          <div className="space-y-8">
-            <h1 className="text-5xl md:text-6xl font-bold leading-tight">
-              <span className="gradient-text">Play. Compete.</span>
-              <br />
-              <span className="text-foreground">Become a Ping Pong</span>
-              <br />
-              <span className="gradient-text">Champion.</span>
-            </h1>
+      <!-- Product -->
+      <div class="space-y-4">
+        <h4 class="font-semibold text-foreground">Product</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Features</a></li>
+          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Pricing</a></li>
+          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Security</a></li>
+          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Blog</a></li>
+        </ul>
+      </div>
 
-            <p className="text-lg text-muted-foreground leading-relaxed max-w-md">
-              Challenge your friends, join tournaments, and climb the global leaderboard — all in real time.
-            </p>
+      <!-- Community -->
+      <div class="space-y-4">
+        <h4 class="font-semibold text-foreground">Community</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Forum</a></li>
+          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Discord</a></li>
+          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Tournaments</a></li>
+          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Players</a></li>
+        </ul>
+      </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg hover:shadow-primary/50 transition-all text-foreground"
-              >
-                Get Started
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-primary/50 text-foreground hover:bg-primary/10 gap-2 bg-transparent"
-              >
-                <Play size={20} />
-                Watch Demo
-              </Button>
-            </div>
-          </div>
+      <!-- Company -->
+      <div class="space-y-4">
+        <h4 class="font-semibold text-foreground">Company</h4>
+        <ul class="space-y-2">
+          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">About</a></li>
+          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Careers</a></li>
+          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Press</a></li>
+          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Contact</a></li>
+        </ul>
+      </div>
+    </div>
 
-          {/* Right Visual */}
-          <div className="relative h-96 md:h-full flex items-center justify-center">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-secondary/30 rounded-2xl blur-3xl"></div>
-            <div className="relative w-64 h-64 md:w-80 md:h-80 bg-gradient-to-br from-primary/40 to-secondary/40 rounded-3xl border border-primary/20 backdrop-blur-sm flex items-center justify-center group hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300">
-              <div className="text-7xl md:text-8xl drop-shadow-lg group-hover:scale-110 transition-transform duration-300">
-                🏓
-              </div>
-            </div>
-          </div>
+    <!-- Divider -->
+    <div class="border-t border-primary/20 pt-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-muted-foreground text-sm">
+          © 2025 PingPong Arena. All rights reserved.
+        </p>
+
+        <!-- Social Icons -->
+        <div class="flex gap-4">
+
+          <!-- GitHub Icon -->
+          <a href="#" class="w-10 h-10 rounded-lg bg-primary/20 hover:bg-primary/40 flex items-center justify-center transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77 5.44 5.44 0 0 0 3.5 9.52c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+            </svg>
+          </a>
+
+          <!-- MessageCircle Icon -->
+          <a href="#" class="w-10 h-10 rounded-lg bg-primary/20 hover:bg-primary/40 flex items-center justify-center transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </a>
+
+          <!-- LinkedIn Icon -->
+          <a href="#" class="w-10 h-10 rounded-lg bg-primary/20 hover:bg-primary/40 flex items-center justify-center transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"></path>
+              <rect x="2" y="9" width="4" height="12"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+          </a>
+
         </div>
       </div>
-    </section>
-  )
-}
+    </div>
+  </div>
+</footer>

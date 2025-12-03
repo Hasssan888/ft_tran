@@ -1,89 +1,471 @@
-<footer class="bg-card/50 border-t border-primary/20 py-12">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PingPong Arena - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        body {
+            background: #000000;
+        }
+
+        .cyber-grid {
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+
+        .neon-box {
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.3),
+                inset 0 0 20px rgba(0, 255, 255, 0.05);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .neon-text {
+            text-shadow: 
+                0 0 10px rgba(0, 255, 255, 0.8),
+                0 0 20px rgba(0, 255, 255, 0.6),
+                0 0 30px rgba(0, 255, 255, 0.4);
+        }
+
+        .neon-pink {
+            text-shadow: 
+                0 0 10px rgba(255, 0, 255, 0.8),
+                0 0 20px rgba(255, 0, 255, 0.6);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .scanline {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(transparent, rgba(0, 255, 255, 0.5), transparent);
+            animation: scanline 4s linear infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .glitch:hover {
+            animation: glitch 0.3s infinite;
+        }
+
+        .cyber-input {
+            background: rgba(0, 20, 30, 0.6);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+        }
+
+        .cyber-input:focus {
+            border-color: rgba(0, 255, 255, 0.8);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.4),
+                inset 0 0 20px rgba(0, 255, 255, 0.1);
+        }
+
+        .cyber-button {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(255, 0, 255, 0.2));
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .cyber-button:hover::before {
+            left: 100%;
+        }
+
+        .cyber-button:hover {
+            box-shadow: 
+                0 0 30px rgba(0, 255, 255, 0.6),
+                inset 0 0 30px rgba(0, 255, 255, 0.2);
+            border-color: rgba(0, 255, 255, 0.8);
+        }
+
+        @keyframes float3d {
+            0%, 100% { transform: translateY(0px) rotateX(5deg); }
+            50% { transform: translateY(-15px) rotateX(-5deg); }
+        }
+
+        .float-3d {
+            animation: float3d 4s ease-in-out infinite;
+            transform-style: preserve-3d;
+        }
+
+        .perspective-container {
+            perspective: 1000px;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .fade-slide {
+            animation: fadeSlideIn 0.6s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .delay-4 { animation-delay: 0.4s; opacity: 0; }
+        .delay-5 { animation-delay: 0.5s; opacity: 0; }
+
+        .corner-cut {
+            clip-path: polygon(
+                20px 0, 100% 0, 100% calc(100% - 20px), 
+                calc(100% - 20px) 100%, 0 100%, 0 20px
+            );
+        }
+
+        @keyframes neonPulse {
+            0%, 100% { 
+                box-shadow: 0 0 5px rgba(0, 255, 255, 0.5),
+                           0 0 10px rgba(0, 255, 255, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 20px rgba(0, 255, 255, 0.8),
+                           0 0 30px rgba(0, 255, 255, 0.5);
+            }
+        }
+
+        .neon-pulse {
+            animation: neonPulse 2s ease-in-out infinite;
+        }
+
+        .hologram {
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(0, 255, 255, 0.1) 50%,
+                transparent 70%
+            );
+            background-size: 200% 200%;
+            animation: hologramShift 3s linear infinite;
+        }
+
+        @keyframes hologramShift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex overflow-hidden relative">
     
-    <div class="grid md:grid-cols-4 gap-8 mb-12">
-      <!-- Branding -->
-      <div class="space-y-4">
-        <div class="flex items-center gap-2">
-          <div class="w-6 h-6 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-sm">
-            🏓
-          </div>
-          <span class="font-bold text-foreground">PingPong Arena</span>
+    <!-- Cyber Grid Background -->
+    <div class="cyber-grid absolute inset-0 opacity-30"></div>
+    <div class="scanline"></div>
+
+    <!-- Left Panel -->
+    <div class="hidden lg:flex w-1/2 relative overflow-hidden">
+        <canvas id="cyberCanvas" class="absolute inset-0"></canvas>
+        
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-8 z-10">
+            <div class="perspective-container mb-8">
+                <div class="float-3d">
+                    <div class="w-24 h-24 corner-cut bg-gradient-to-br from-cyan-500 to-purple-600 
+                        flex items-center justify-center mx-auto mb-6 neon-pulse relative">
+                        <span class="text-6xl">🏓</span>
+                        <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg opacity-20 blur"></div>
+                    </div>
+                </div>
+            </div>
+
+            <h1 class="text-6xl lg:text-7xl font-bold mb-6 tracking-tight">
+                <span class="text-cyan-400 neon-text">PING</span>
+                <span class="text-purple-500 neon-pink">PONG</span>
+            </h1>
+            <p class="text-xl text-cyan-300 max-w-md leading-relaxed font-light mb-8">
+                Enter the digital arena where champions are forged
+            </p>
+
+            <div class="grid grid-cols-3 gap-6 mt-12">
+                <div class="neon-box corner-cut p-6 backdrop-blur-sm">
+                    <div class="text-4xl font-bold text-cyan-400 neon-text">24K</div>
+                    <div class="text-xs text-gray-400 mt-2 uppercase tracking-wider">Warriors</div>
+                </div>
+                <div class="neon-box corner-cut p-6 backdrop-blur-sm">
+                    <div class="text-4xl font-bold text-purple-400 neon-pink">99K</div>
+                    <div class="text-xs text-gray-400 mt-2 uppercase tracking-wider">Battles</div>
+                </div>
+                <div class="neon-box corner-cut p-6 backdrop-blur-sm">
+                    <div class="text-4xl font-bold text-cyan-400 neon-text">∞</div>
+                    <div class="text-xs text-gray-400 mt-2 uppercase tracking-wider">Glory</div>
+                </div>
+            </div>
         </div>
-        <p class="text-muted-foreground text-sm">
-          The ultimate competitive ping pong platform.
-        </p>
-      </div>
-
-      <!-- Product -->
-      <div class="space-y-4">
-        <h4 class="font-semibold text-foreground">Product</h4>
-        <ul class="space-y-2">
-          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Features</a></li>
-          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Pricing</a></li>
-          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Security</a></li>
-          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Blog</a></li>
-        </ul>
-      </div>
-
-      <!-- Community -->
-      <div class="space-y-4">
-        <h4 class="font-semibold text-foreground">Community</h4>
-        <ul class="space-y-2">
-          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Forum</a></li>
-          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Discord</a></li>
-          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Tournaments</a></li>
-          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Players</a></li>
-        </ul>
-      </div>
-
-      <!-- Company -->
-      <div class="space-y-4">
-        <h4 class="font-semibold text-foreground">Company</h4>
-        <ul class="space-y-2">
-          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">About</a></li>
-          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Careers</a></li>
-          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Press</a></li>
-          <li><a href="#" class="text-muted-foreground hover:text-foreground text-sm transition-colors">Contact</a></li>
-        </ul>
-      </div>
     </div>
 
-    <!-- Divider -->
-    <div class="border-t border-primary/20 pt-8">
-      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-        <p class="text-muted-foreground text-sm">
-          © 2025 PingPong Arena. All rights reserved.
-        </p>
+    <!-- Right Login Form -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center px-6 py-8 relative">
+        <!-- Ambient effects -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" style="animation: pulse 3s ease-in-out infinite 1s;"></div>
+        
+        <div class="w-full max-w-md relative z-10">
+            <!-- Back Button -->
+            <a href="/" class="absolute -top-12 right-0 text-sm text-cyan-400 hover:text-cyan-300
+                transition-all duration-300 flex items-center gap-2 group border border-cyan-500/30 
+                px-4 py-2 corner-cut hover:border-cyan-500/60">
+                <span>←</span>
+                <span class="uppercase tracking-wider text-xs">Return</span>
+            </a>
 
-        <!-- Social Icons -->
-        <div class="flex gap-4">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 mb-10 fade-slide delay-1">
+                <div class="w-14 h-14 corner-cut bg-gradient-to-br from-cyan-500 to-purple-600 
+                    flex items-center justify-center neon-box">
+                    <span class="text-2xl">🏓</span>
+                </div>
+                <div>
+                    <span class="text-xl font-bold text-cyan-400 block">PINGPONG</span>
+                    <span class="text-xs text-gray-500 uppercase tracking-widest">Arena System</span>
+                </div>
+            </div>
 
-          <!-- GitHub Icon -->
-          <a href="#" class="w-10 h-10 rounded-lg bg-primary/20 hover:bg-primary/40 flex items-center justify-center transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77 5.44 5.44 0 0 0 3.5 9.52c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-            </svg>
-          </a>
+            <!-- Card -->
+            <div class="neon-box backdrop-blur-xl bg-black/40 corner-cut p-8 relative overflow-hidden fade-slide delay-2">
+                <div class="hologram absolute inset-0 pointer-events-none"></div>
+                
+                <div class="relative z-10">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-1 h-8 bg-gradient-to-b from-cyan-500 to-purple-600"></div>
+                        <h2 class="text-3xl font-bold text-white uppercase tracking-tight">Access Point</h2>
+                    </div>
+                    <p class="text-gray-400 mb-8 text-sm ml-4">Authenticate your credentials</p>
 
-          <!-- MessageCircle Icon -->
-          <a href="#" class="w-10 h-10 rounded-lg bg-primary/20 hover:bg-primary/40 flex items-center justify-center transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-          </a>
+                    <!-- FORM -->
+                    <form id="loginForm" class="space-y-6">
+                        <!-- Email -->
+                        <div class="space-y-2 fade-slide delay-3">
+                            <label for="email" class="text-xs font-medium text-cyan-400 uppercase tracking-wider flex items-center gap-2">
+                                <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
+                                Email Address
+                            </label>
+                            <input type="email" id="email" placeholder="user@arena.net"
+                                class="cyber-input px-4 py-3 text-white placeholder:text-gray-600 w-full focus:outline-none">
+                        </div>
 
-          <!-- LinkedIn Icon -->
-          <a href="#" class="w-10 h-10 rounded-lg bg-primary/20 hover:bg-primary/40 flex items-center justify-center transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"></path>
-              <rect x="2" y="9" width="4" height="12"></rect>
-              <circle cx="4" cy="4" r="2"></circle>
-            </svg>
-          </a>
+                        <!-- Password -->
+                        <div class="space-y-2 fade-slide delay-4">
+                            <label for="password" class="text-xs font-medium text-cyan-400 uppercase tracking-wider flex items-center gap-2">
+                                <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
+                                Security Key
+                            </label>
+                            <div class="relative">
+                                <input type="password" id="password" placeholder="••••••••••••" 
+                                    class="cyber-input px-4 py-3 pr-12 text-white placeholder:text-gray-600 w-full focus:outline-none">
+                                <button type="button" id="togglePassword" class="absolute right-4 top-1/2 -translate-y-1/2 
+                                    text-gray-500 hover:text-cyan-400 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
 
+                        <!-- Options -->
+                        <div class="flex items-center justify-between pt-2 fade-slide delay-5">
+                            <label class="flex items-center gap-2 text-xs text-gray-400 cursor-pointer group">
+                                <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded-none border-2 border-cyan-500/50 
+                                    text-cyan-500 focus:ring-cyan-500/50 focus:ring-offset-0 bg-transparent" />
+                                <span class="group-hover:text-cyan-400 transition-colors uppercase tracking-wider">Remember</span>
+                            </label>
+                            <a href="#" class="text-xs text-purple-400 hover:text-purple-300 transition-colors uppercase tracking-wider glitch">
+                                Recover Key?
+                            </a>
+                        </div>
+
+                        <!-- Submit -->
+                        <button type="submit" class="cyber-button w-full py-4 text-white font-bold uppercase 
+                            tracking-widest text-sm transition-all duration-300 mt-8 relative group">
+                            <span class="relative z-10 flex items-center justify-center gap-3">
+                                <span>Initialize Access</span>
+                                <span class="text-cyan-400">→</span>
+                            </span>
+                        </button>
+                    </form>
+
+                    <!-- Divider -->
+                    <div class="flex items-center gap-4 my-8">
+                        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"></div>
+                        <span class="text-xs text-gray-600 font-bold uppercase tracking-widest">Or Connect Via</span>
+                        <div class="flex-1 h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"></div>
+                    </div>
+
+                    <!-- Socials -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <button class="cyber-input py-3 text-white font-medium uppercase text-xs tracking-wider 
+                            hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300 group">
+                            <span class="flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                                </svg>
+                                <span>Google</span>
+                            </span>
+                        </button>
+                        <button class="cyber-input py-3 text-white font-medium uppercase text-xs tracking-wider 
+                            hover:border-purple-400 hover:text-purple-400 transition-all duration-300 group">
+                            <span class="flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                </svg>
+                                <span>GitHub</span>
+                            </span>
+                        </button>
+                    </div>
+
+                    <p class="text-center text-sm text-gray-500 mt-8">
+                        <span class="uppercase tracking-wider text-xs">New User?</span>
+                        <a href="/signup" class="text-cyan-400 font-bold hover:text-cyan-300 transition-colors ml-2 uppercase tracking-wider text-xs glitch">
+                            Register Now →
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <p class="text-center text-xs text-gray-700 mt-6 uppercase tracking-widest">
+                © 2025 PingPong Arena — System v4.2
+            </p>
         </div>
-      </div>
     </div>
-  </div>
-</footer>
+
+    <script>
+        // Cyberpunk Canvas Animation
+        const canvas = document.getElementById('cyberCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+
+        class CyberLine {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = 0;
+                this.length = Math.random() * 100 + 50;
+                this.speed = Math.random() * 3 + 2;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.color = Math.random() > 0.5 ? '0, 255, 255' : '255, 0, 255';
+            }
+
+            update() {
+                this.y += this.speed;
+                if (this.y > canvas.height + this.length) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                const gradient = ctx.createLinearGradient(this.x, this.y - this.length, this.x, this.y);
+                gradient.addColorStop(0, `rgba(${this.color}, 0)`);
+                gradient.addColorStop(0.5, `rgba(${this.color}, ${this.opacity})`);
+                gradient.addColorStop(1, `rgba(${this.color}, 0)`);
+
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y - this.length);
+                ctx.lineTo(this.x, this.y);
+                ctx.stroke();
+            }
+        }
+
+        const lines = [];
+        for (let i = 0; i < 30; i++) {
+            lines.push(new CyberLine());
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            lines.forEach(line => {
+                line.update();
+                line.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Password toggle
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const password = document.getElementById('password');
+            password.type = password.type === 'password' ? 'text' : 'password';
+        });
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const button = this.querySelector('button[type="submit"]');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<span class="inline-block animate-pulse">⚡ ACCESSING SYSTEM...</span>';
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+            }, 2000);
+        });
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        });
+    </script>
+</body>
+</html>

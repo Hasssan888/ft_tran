@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PingPong Arena - Login</title>
+    <link rel="stylesheet" href="../src/output.css">
+</head>
+<body class="bg-background min-h-screen flex">
+    
+    <!-- left Illustration -->
+    <div class="hidden lg:flex w-1/2 relative overflow-hidden bg-gradient-to-br from-background via-background/80 to-primary/10">
+        <!-- Canvas Animation -->
+        <div class="absolute inset-0 flex items-center justify-center">
+            <canvas id="illustrationCanvas" class="w-full h-full"></canvas>
+
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-8">
+                <div class="mb-8">
+                    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-secondary 
+                        flex items-center justify-center mx-auto mb-4 shadow-lg shadow-primary/50">
+                        <span class="text-3xl">🏓</span>
+                    </div>
+                </div>
+
+                <h1 class="text-4xl lg:text-5xl font-bold text-white mb-4">Play. Compete. Win.</h1>
+                <p class="text-lg text-muted-foreground max-w-xs">
+                    Join the ultimate ping pong arena and battle players worldwide
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Login Form -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center px-4 py-8">
+        <div class="w-full max-w-md relative">
+            <!-- Back to Home -->
+            <div class="absolute top-6 right-6">
+                <a href="/" class="text-sm text-muted-foreground hover:text-foreground
+                    transition-colors">
+                    Back to Home
+                </a>
+            </div>
+            <!-- Logo -->
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary
+                    to-secondary flex items-center justify-center">
+                    <span class="text-xl">🏓</span>
+                    <!-- <img src="../images/ping-pong.png" alt=""> -->
+                </div>
+                <span class="text-lg font-bold text-foreground">PingPong Arena</span>
+            </div>
+            <!-- Card -->
+            <div class="glass-effect border border-white/10 rounded-2xl p-8 backdrop-blur-xl">
+                <h2 class="text-2xl font-bold text-foreground mb-2">Welcome Back</h2>
+                <p class="text-sm text-muted-foreground mb-8">Login to continue your game</p>
+                <!-- FORM -->
+                <form action="" id="loginForm" class="space-y-5">
+                    <!-- Email -->
+                    <div class="space-y-2">
+                        <label for="email" class="text-sm font-medium text-foreground">Email</label>
+                        <div class="relative">
+                            <input type="email" id="email" placeholder="you@example.com"
+                                class="pl-10 bg-background/50 border-primary/20 focus:border-primary/50
+                                focus:ring-primary/20 text-foreground placeholder:text-muted-foreground
+                                rounded-lg w-full h-10 border">
+                        </div>
+                    </div>
+                    <!-- Password -->
+                    <div class="space-y-2">
+                        <label for="password" class="text-sm font-medium text-foreground">Password</label>
+
+                        <div class="relative">
+                            <input type="password" id="password" placeholder="••••••••" 
+                                class="pl-10 pr-10 bg-background/50 border-primary/20 focus:border-primary/50
+                                focus:ring-primary/20 text-foreground placeholder:text-muted-foreground rounded-lg
+                                w-full h-10 border" >
+                            <button type="button" id="togglePassword" class="absolute right-3
+                                top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                                👁
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Remember Me -->
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
+                            <input type="checkbox" id="rememberMe" class="accent-primary" />
+                            Remember me
+                        </label>
+                        <a href="#" class="text-sm text-primary hover:text-primary/80">Forgot password?</a>
+                    </div>
+                    <!-- Submit -->
+                    <button class="w-full h-11 bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-lg cursor-pointer">
+                        Login
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="flex items-center gap-3 my-5">
+                    <div class="flex-1 h-px bg-white/10"></div>
+                    <span class="text-xs text-muted-foreground">or</span>
+                    <div class="flex-1 h-px bg-white/10"></div>
+                </div>
+
+                <!-- Socials -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button class="border border-white/10 bg-background/30 rounded-lg h-10">Google</button>
+                    <button class="border border-white/10 bg-background/30 rounded-lg h-10">GitHub</button>
+                </div>
+
+                <p class="text-center text-sm text-muted-foreground mt-6">
+                    Don't have an account?
+                    <a href="/signup" class="text-primary font-semibold">Create one</a>
+                </p>
+            </div>
+            <p class="text-center text-xs text-muted-foreground mt-6">
+                © 2025 PingPong Arena — All rights reserved.
+            </p>
+        </div>
+    </div>
+
+    <script  src="../src/dist"></script>
+</body>
+</html>

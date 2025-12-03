@@ -13,7 +13,7 @@
     <div class="hidden lg:flex w-1/2 relative overflow-hidden bg-gradient-to-br from-background via-background/80 to-primary/10">
         <!-- Canvas Animation -->
         <div class="absolute inset-0 flex items-center justify-center">
-            <canvas id="illustrationCanvas" class="w-full h-full"></canvas>
+            <!-- <canvas id="illustrationCanvas" class="w-full h-full"></canvas> -->
 
             <div class="absolute inset-0 flex flex-col items-center justify-center text-center px-8">
                 <div class="mb-8">
@@ -35,7 +35,7 @@
     <div class="w-full lg:w-1/2 flex items-center justify-center px-4 py-8">
         <div class="w-full max-w-md relative">
             <!-- Back to Home -->
-            <div class="absolute top-6 right-6">
+            <div class="absolute top-4 left-196 right-0">
                 <a href="/" class="text-sm text-muted-foreground hover:text-foreground
                     transition-colors">
                     Back to Home
@@ -61,7 +61,7 @@
                         <label for="email" class="text-sm font-medium text-foreground">Email</label>
                         <div class="relative">
                             <input type="email" id="email" placeholder="you@example.com"
-                                class="pl-10 bg-background/50 border-primary/20 focus:border-primary/50
+                                class="px-4 bg-background/50 border-primary/20 focus:border-primary/50
                                 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground
                                 rounded-lg w-full h-10 border">
                         </div>
@@ -72,11 +72,11 @@
 
                         <div class="relative">
                             <input type="password" id="password" placeholder="••••••••" 
-                                class="pl-10 pr-10 bg-background/50 border-primary/20 focus:border-primary/50
+                                class="px-4 bg-background/50 border-primary/20 focus:border-primary/50
                                 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground rounded-lg
                                 w-full h-10 border" >
                             <button type="button" id="togglePassword" class="absolute right-3
-                                top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                                top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground text-2xl">
                                 👁
                             </button>
                         </div>
@@ -84,7 +84,7 @@
                     <!-- Remember Me -->
                     <div class="flex items-center justify-between">
                         <label class="flex items-center gap-2 text-sm text-muted-foreground cursor-pointer">
-                            <input type="checkbox" id="rememberMe" class="accent-primary" />
+                            <input type="checkbox" id="rememberMe" class="bg-p" />
                             Remember me
                         </label>
                         <a href="#" class="text-sm text-primary hover:text-primary/80">Forgot password?</a>
@@ -119,6 +119,7 @@
         </div>
     </div>
 
-    <script  src="../src/dist"></script>
+    <script src="../dist/illustration.js"></script>
+    <script src="../dist/main.js"></script>
 </body>
 </html>

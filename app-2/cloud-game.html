@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PingPong Arena - Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#0a0a0a',
+                        card: '#1a1a1a',
+                        cardHover: '#242424',
+                        primary: '#5b7bf5',
+                        secondary: '#8b5cf6',
+                        accent: '#a855f7',
+                        muted: '#2a2a2a',
+                        textPrimary: '#ffffff',
+                        textSecondary: '#9ca3af',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #5b7bf5, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        #gameCanvas {
+            background: linear-gradient(135deg, rgba(10, 20, 30, 0.9), rgba(5, 10, 15, 0.95));
+        }
+    </style>
+</head>
+<body class="bg-background text-white">
+    <div class="min-h-screen flex flex-col">
+        <!-- Game Navbar -->
+        <nav class="fixed top-0 left-0 right-0 h-16 bg-[#0f0f0f] backdrop-blur border-b border-gray-800 z-40 flex items-center justify-between px-4 md:px-6">
+            <!-- Logo -->
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                    <span class="text-white font-bold text-sm">🏓</span>
+                </div>
+                <span class="font-bold text-lg gradient-text hidden sm:inline">PingPong Arena</span>
+            </div>
+
+            <!-- Match Info -->
+            <div class="flex-1 flex flex-col items-center mx-4">
+                <p class="text-sm font-semibold">vs. Opponent</p>
+                <div class="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span id="matchTime">15:32</span>
+                </div>
+            </div>
+
+            <!-- Score & Avatar -->
+            <div class="flex items-center gap-3">
+                <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-primary/10 border border-primary/20">
+                    <span class="text-sm font-semibold text-primary" id="playerScore">15</span>
+                    <span class="text-xs text-gray-400">-</span>
+                    <span class="text-sm font-semibold text-accent" id="opponentScore">12</span>
+                </div>
+
+                <button id="profileBtn" class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-xs font-bold hover:shadow-lg transition-all">
+                    Y
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex overflow-hidden pt-16">
+            <!-- Game Area -->
+            <div class="flex-1 flex flex-col items-center justify-center p-4 md:p-6 overflow-y-auto">
+                <div class="w-full max-w-6xl">
+                    <!-- Canvas Container -->
+                    <div class="relative mb-6">
+                        <canvas id="gameCanvas" class="w-full rounded-2xl border-2 border-primary/50 shadow-xl shadow-primary/20"></canvas>
+                        <div class="absolute top-4 left-4 text-sm font-bold text-primary">You</div>
+                        <div class="absolute top-4 right-4 text-sm font-bold text-secondary">Opponent</div>
+                    </div>
+
+                    <!-- Game Controls -->
+                    <div class="flex gap-2 md:gap-3 justify-center flex-wrap mb-6">
+                        <button id="pauseBtn" class="px-4 py-2 rounded-lg font-semibold bg-primary hover:bg-primary/80 transition-all inline-flex items-center gap-2">
+                            <svg id="pauseIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="hidden sm:inline" id="pauseText">Pause</span>
+                        </button>
+
+                        <button id="soundBtn" class="px-4 py-2 rounded-lg font-semibold bg-transparent border border-gray-700 hover:bg-muted transition-all inline-flex items-center gap-2">
+                            <svg id="soundIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                            </svg>
+                            <span class="hidden sm:inline" id="soundText">Sound On</span>
+                        </button>
+
+                        <button id="fullscreenBtn" class="px-4 py-2 rounded-lg font-semibold bg-transparent border border-gray-700 hover:bg-muted transition-all inline-flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                            </svg>
+                            <span class="hidden sm:inline">Fullscreen</span>
+                        </button>
+
+                        <button id="exitBtn" class="px-4 py-2 rounded-lg font-semibold bg-red-600 hover:bg-red-700 transition-all inline-flex items-center gap-2 ml-auto">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                            </svg>
+                            <span class="hidden sm:inline">Exit Match</span>
+                        </button>
+                    </div>
+
+                    <!-- Recent Matches -->
+                    <div class="bg-[#1a1a1a] border border-gray-800 rounded-xl p-6">
+                        <h3 class="text-lg font-bold mb-4 gradient-text">Recent Matches</h3>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="border-b border-gray-800">
+                                        <th class="text-left py-3 px-4 font-semibold text-gray-400">Opponent</th>
+                                        <th class="text-center py-3 px-4 font-semibold text-gray-400">Result</th>
+                                        <th class="text-center py-3 px-4 font-semibold text-gray-400">Score</th>
+                                        <th class="text-right py-3 px-4 font-semibold text-gray-400">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="matchesTable">
+                                    <!-- Matches will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="hidden xl:block w-80 border-l border-gray-800 bg-[#0f0f0f] overflow-y-auto">
+                <!-- Match Info -->
+                <div class="p-4 border-b border-gray-800">
+                    <h3 class="font-bold text-sm mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                        Match Info
+                    </h3>
+
+                    <div class="space-y-3">
+                        <!-- Your Stats -->
+                        <div class="p-3 bg-primary/5 border border-primary/20 rounded-lg">
+                            <p class="text-xs text-gray-400 mb-2">Your Stats</p>
+                            <div class="grid grid-cols-2 gap-2 text-sm font-semibold">
+                                <div>
+                                    <p class="text-xs text-gray-400">Wins</p>
+                                    <p class="text-primary">128</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400">Losses</p>
+                                    <p>42</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400">XP</p>
+                                    <p class="text-accent">2.5k</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400">Rank</p>
+                                    <p class="text-primary">Elite</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Opponent Stats -->
+                        <div class="p-3 bg-secondary/5 border border-secondary/20 rounded-lg">
+                            <p class="text-xs text-gray-400 mb-2">Opponent Stats</p>
+                            <div class="grid grid-cols-2 gap-2 text-sm font-semibold">
+                                <div>
+                                    <p class="text-xs text-gray-400">Wins</p>
+                                    <p class="text-secondary">94</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400">Losses</p>
+                                    <p>31</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400">XP</p>
+                                    <p class="text-accent">2.1k</p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400">Rank</p>
+                                    <p class="text-secondary">Pro</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Friends Online -->
+                <div class="p-4 border-b border-gray-800">
+                    <h3 class="font-bold text-sm mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        Friends Online
+                    </h3>
+
+                    <div class="space-y-2" id="friendsList">
+                        <!-- Friends will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Quick Chat -->
+                <div class="p-4 flex flex-col flex-1">
+                    <h3 class="font-bold text-sm mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        Quick Chat
+                    </h3>
+
+                    <div class="flex-1 overflow-y-auto mb-3 space-y-2" id="chatMessages">
+                        <div class="text-xs bg-primary/10 p-2 rounded border border-primary/20">
+                            <p class="font-semibold text-primary">You</p>
+                            <p>nice serve!</p>
+                        </div>
+                        <div class="text-xs bg-secondary/10 p-2 rounded border border-secondary/20">
+                            <p class="font-semibold text-secondary">Opponent</p>
+                            <p>thanks! good match</p>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <input
+                            id="chatInput"
+                            type="text"
+                            placeholder="Message..."
+                            class="flex-1 px-3 py-2 text-sm rounded-lg bg-[#1a1a1a] border border-gray-700 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        />
+                        <button id="sendBtn" class="px-3 py-2 bg-primary hover:bg-primary/80 rounded-lg text-sm font-medium transition-all">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./dist/game.ts">
+        
+    </script>
+</body>
+</html>

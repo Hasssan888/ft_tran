@@ -1,11 +1,7 @@
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tw-animate-css";
 
-
-/* Import Geist Font */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+@custom-variant dark (&:is(.dark *));
 
 :root {
   /* Updated color system for PingPong Arena gaming aesthetic */
@@ -42,10 +38,6 @@
   --sidebar-accent-foreground: oklch(0.98 0 0);
   --sidebar-border: oklch(0.25 0 0);
   --sidebar-ring: oklch(0.55 0.2 265);
-  --card: '#1a1a1a',
-  --cardHover: '#242424',
-  --textPrimary: '#ffffff',
-  --textSecondary: '#9ca3af',
 }
 
 .dark {
@@ -83,10 +75,9 @@
   --sidebar-ring: oklch(0.58 0.22 270);
 }
 
-/* Configure Tailwind theme inline for v4 */
 @theme inline {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+  --font-sans: "Geist", "Geist Fallback";
+  --font-mono: "Geist Mono", "Geist Mono Fallback";
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -123,9 +114,6 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --color-cardHover: var(--cardHover); 
-  --color-textPrimary: var(--textPrimary);
-  --color-textSecondary: var(--textSecondary);
 }
 
 @layer base {
@@ -133,13 +121,13 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
   }
 }
 
 /* Added custom gradient classes for gaming aesthetic */
 @layer components {
-  /* Animations */
+  /* Sliding entrance animation from left */
   @keyframes slideInFromLeft {
     from {
       transform: translateX(-100%);
@@ -149,8 +137,9 @@
       transform: translateX(0);
       opacity: 1;
     }
-  } 
+  }
 
+  /* Sliding exit animation to left */
   @keyframes slideOutToLeft {
     from {
       transform: translateX(0);
@@ -162,6 +151,7 @@
     }
   }
 
+  /* Width expansion for hover reveal */
   @keyframes expandWidth {
     from {
       width: 5rem;
@@ -171,6 +161,7 @@
     }
   }
 
+  /* Fade in for navigation items */
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -182,40 +173,6 @@
     }
   }
 
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0) translateX(0);
-    }
-    25% {
-      transform: translateY(-10px) translateX(5px);
-    }
-    50% {
-      transform: translateY(-20px) translateX(-5px);
-    }
-    75% {
-      transform: translateY(-10px) translateX(5px);
-    }
-  }
-
-  @keyframes gradientShift {
-    0%, 100% {
-      filter: hue-rotate(0deg);
-    }
-    50% {
-      filter: hue-rotate(20deg);
-    }
-  }
-
-  @keyframes pulse-slow {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.5;
-    }
-  } */
-
-  /* Utility Classes */
   .gradient-text {
     @apply bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent;
   }
@@ -248,56 +205,4 @@
   .nav-item-stagger {
     animation: fadeInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
-
-  .animate-fade-in-up {
-    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    opacity: 0;
-  }
-
-  .animate-gradient-shift {
-    animation: gradientShift 3s ease-in-out infinite;
-  }
-
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  .animate-pulse-slow {
-    animation: pulse-slow 4s ease-in-out infinite;
-  }
-
-  /* body {
-            background-color: #0a0a0a;
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        } */
-  .gradient-text {
-      background: linear-gradient(to right, #5b7bf5, #a855f7);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .sidebar-collapsed {
-        width: 64px;
-    }
-    .sidebar-expanded {
-        width: 200px;
-    }
-    .stat-card {
-        transition: all 0.3s;
-    }
-    .stat-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 30px rgba(91, 123, 245, 0.2);
-    }
-    .online-indicator {
-        width: 12px;
-        height: 12px;
-        background: #10b981;
-        border: 2px solid #1a1a1a;
-        border-radius: 50%;
-        position: absolute;
-        bottom: 2px;
-        right: 2px;
-    }
 }

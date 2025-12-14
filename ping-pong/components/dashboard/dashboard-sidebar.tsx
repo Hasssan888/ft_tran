@@ -7,6 +7,7 @@ import { useState } from "react"
 interface DashboardSidebarProps {
 open: boolean
 onClose: () => void
+onHoverChange: (isHovered: boolean) => void
 }
 
 const navItems = [
@@ -19,9 +20,19 @@ const navItems = [
 { icon: Settings, label: "Settings", href: "/settings", id: "settings" },
 ]
 
-export default function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
+export default function DashboardSidebar({ open, onClose, onHoverChange }: DashboardSidebarProps) {
 const [activeItem, setActiveItem] = useState("dashboard")
 const [isExpanded, setIsExpanded] = useState(false)
+
+const handleMouseEnter = () => {
+    setIsExpanded(true)
+    onHoverChange(true)
+}
+
+const handleMouseLeave = () => {
+    setIsExpanded(false)
+    onHoverChange(false)
+}
 
 return (
     <>
@@ -35,9 +46,9 @@ return (
 
     {/* Desktop sidebar */}
     <aside
-        className="hidden md:flex h-screen sticky top-0"
-        onMouseEnter={() => setIsExpanded(true)}
-        onMouseLeave={() => setIsExpanded(false)}
+        className="hidden md:flex h-screen sticky top-0 z-50"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
     >
         <div
         className={`h-full bg-card border-r border-border/50 flex flex-col transition-all duration-300 ease-in-out ${
@@ -50,8 +61,8 @@ return (
             <span className="text-xl">🏓</span>
             </div>
             <h1
-            className={`text-xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent whitespace-nowrap transition-opacity duration-300 ${
-                isExpanded ? "opacity-100" : "opacity-0 w-0"
+            className={`text-xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent whitespace-nowrap transition-all duration-300 ${
+                isExpanded ? "opacity-100 w-auto" : "opacity-0 w-0"
             }`}
             >
             PingPong Arena
@@ -84,8 +95,8 @@ return (
                 }`} />
                 
                 <span
-                    className={`font-medium whitespace-nowrap transition-opacity duration-300 ${
-                    isExpanded ? "opacity-100" : "opacity-0 w-0"
+                    className={`font-medium whitespace-nowrap transition-all duration-300 ${
+                    isExpanded ? "opacity-100 w-auto" : "opacity-0 w-0"
                     }`}
                 >
                     {item.label}

@@ -14,17 +14,29 @@ import DashboardFooter from "@/components/dashboard/dashboard-footer"
 
 export default function DashboardPage() {
 const [sidebarOpen, setSidebarOpen] = useState(false)
+const [sidebarExpanded, setSidebarExpanded] = useState(false)
 
 return (
     <DashboardLayout sidebarOpen={sidebarOpen}>
-    <DashboardSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+    {/* Sidebar */}
+    <DashboardSidebar 
+        open={sidebarOpen} 
+        onClose={() => setSidebarOpen(false)}
+        onHoverChange={setSidebarExpanded}
+    />
     
+    {/* Main content area */}
     <div className="flex-1 flex flex-col min-w-0">
-        <DashboardNavbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+        {/* Navbar - synced with sidebar */}
+        <DashboardNavbar 
+        onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+        sidebarExpanded={sidebarExpanded}
+        />
         
-        <main className="flex-1 overflow-auto">
+        {/* Main content */}
+        <main className="flex-1 overflow-auto mt-16">
         <div className="min-h-full flex flex-col">
-            <div className="flex-1 p-4 md:p-8 space-y-8 mt-16">
+            <div className="flex-1 p-4 md:p-8 space-y-8">
             <HeroWelcome />
             <StatsOverview />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

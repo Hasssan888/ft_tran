@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -124,7 +125,7 @@
   }
 }
 
-/* Custom animations and utilities */
+/* Added custom gradient classes for gaming aesthetic */
 @layer components {
   /* Sliding entrance animation from left */
   @keyframes slideInFromLeft {
@@ -172,38 +173,6 @@
     }
   }
 
-  /* Pulse animation */
-  @keyframes pulse {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.5;
-    }
-  }
-
-  /* Bounce animation */
-  @keyframes bounce {
-    0%, 100% {
-      transform: translateY(-25%);
-      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-    }
-    50% {
-      transform: translateY(0);
-      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-    }
-  }
-
-  /* Spin animation */
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
   .gradient-text {
     @apply bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent;
   }
@@ -214,19 +183,6 @@
 
   .button-glow {
     @apply hover:shadow-lg hover:shadow-primary/50 transition-all duration-300;
-  }
-
-  /* Animation utility classes */
-  .animate-pulse {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  .animate-bounce {
-    animation: bounce 1s infinite;
-  }
-
-  .animate-spin {
-    animation: spin 1s linear infinite;
   }
 
   /* Sidebar animations */

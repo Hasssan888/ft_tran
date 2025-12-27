@@ -1,4 +1,4 @@
-@import "tailwindcss";
+/* @import "tailwindcss";
 
 :root {
   --background: #ffffff;
@@ -18,9 +18,40 @@
     --foreground: #ededed;
   }
 }
-
+*/
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: #0a0a0a;
+  color:  #ededed;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.app {
+  border: 3px solid gray;
+  margin: 50px 30px;
+  padding: 25px 15px;
+}
+
+.to-do-container {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.to-do-container ul li {
+  width: 500px;
+  overflow-wrap: break-word;
+  list-style-type: "👉";
+  cursor: pointer;
+}
+
+.done {
+  text-decoration: line-through;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
 }

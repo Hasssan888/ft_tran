@@ -8,11 +8,148 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react"
 
+type SignupFormData = {
+    userName: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
 export default function SignupForm() {
+
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [agreeTerms, setAgreeTerms] = useState(false)
+    const [formInput, setFormInput] = useState<SignupFormData>({ 
+        userName: "", 
+        email: "", 
+        password: "", 
+        confirmPassword:"",
+    });
 
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+
+        // Validation simple (optional)
+        if (!formInput.userName || !formInput.email || 
+                !formInput.password || !formInput.confirmPassword) {
+                    console.warn("Please fill all fields!");
+                    return;
+        }
+
+        if (formInput.password !== formInput.confirmPassword) {
+            console.warn("Password do not match!");
+            return;
+        }
+
+        if (!agreeTerms) {
+            console.warn("You must agree to the terms!");
+            return;
+        }
+
+        try {
+            // Frontend-ready fetch call
+            const res = await fetch("/api/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: formInput.userName,
+                    email: formInput.email,
+                    password: formInput.password,
+                }),
+            });
+            
+            if (!res.ok) {
+                console.error("Error:", res.status);
+                return;
+            }
+    
+            const data = await res.json().catch(() => ({
+                message: "Signup simulated",
+                data: { name: formInput.userName, email: formInput.email },
+            }));
+
+            console.log("API Response:", data);
+
+            // Success feedback (frintend only);
+            alert(`Signup successful! Welcome ${data.data.name}`);
+            // Reset form
+            setFormInput({
+                userName: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
+            });
+            setAgreeTerms(false);
+            setShowPassword(false);
+            setShowConfirmPassword(false);
+
+        } catch (err) {
+            console.error("Signup failed:", err);
+        }
+    };
+
+
+    // const handleSubmit = async (e: React.FormEvent) => {
+    //     e.preventDefault();
+    //     console.log(formInput);
+
+    //     // Basic frontend validation
+    //     if (!agreeTerms) {
+    //         alert("You must agree to the Terms & Conditions");
+    //         return;
+    //     }
+
+    //     if (formInput.password !== formInput.confirmPassword) {
+    //         alert("Passwords do not match");
+    //         return;
+    //     }
+
+    //     if (!formInput.userName || !formInput.email || !formInput.password) {
+    //         alert("All fields are required");
+    //         return;
+    //     }
+
+    //     try {
+    //         // Send data to backend API
+    //         const res = await fetch("/api/signup", {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify({
+    //                 userName: formInput.userName,
+    //                 email: formInput.email,
+    //                 password: formInput.password,
+    //             }),
+    //         });
+
+    //         const data = await res.json();
+
+    //         // Handle backend errors
+    //         if (!res.ok) {
+    //             alert(data.message || "Signup failed");
+    //             return;
+    //         }
+
+    //         // Success
+    //         alert("Account created successfully 🎉");
+
+    //         // Optional: clear form
+    //         setFormInput({
+    //             userName: "",
+    //             email: "",
+    //             password: "",
+    //             confirmPassword: "",
+    //         });
+
+    //         setAgreeTerms(false);
+    //     } catch (error) {
+    //         alert("Something went wrong. Please try again.");
+    //         console.error(error);
+    //     }
+    // };
+    
     return (
         <div className="w-full max-w-md">
         {/* Header */}
@@ -33,108 +170,139 @@ export default function SignupForm() {
         {/* Form Card */}
         <div className="glass-effect border border-white/10 rounded-2xl p-8 backdrop-blur-xl">
             <div className="mb-8">
-            <h2 className="text-2xl font-bold text-foreground mb-2">Create Your Account</h2>
-            <p className="text-sm text-muted-foreground">Join the arena and start competing</p>
+                <h2 className="text-2xl font-bold text-foreground mb-2">Create Your Account</h2>
+                <p className="text-sm text-muted-foreground">Join the arena and start competing</p>
             </div>
 
             {/* Form Inputs */}
-            <form className="space-y-4 mb-8">
-            {/* Username Input */}
-            <div className="space-y-2">
-                <Label htmlFor="username" className="text-sm font-medium text-foreground">
-                Username
-                </Label>
-                <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
-                <Input
-                    id="username"
-                    type="text"
-                    placeholder="championplayer"
-                    className="pl-10 bg-background/50 border-primary/20 focus:border-primary/50 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground rounded-lg"
-                />
+            <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Username Input */}
+                <div className="space-y-2">
+                    <Label htmlFor="username" className="text-sm font-medium text-foreground">
+                        Username
+                    </Label>
+                    <div className="relative">
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                        <Input
+                            value={formInput.userName}
+                            onChange={(event) => {
+                                setFormInput(prev => ({ 
+                                ...prev, 
+                                userName: event.target.value
+                            }));
+                            }}
+                            id="username"
+                            type="text"
+                            placeholder="championplayer"
+                            className="pl-10 bg-background/50 border-primary/20 focus:border-primary/50 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground rounded-lg"
+                        />
+                    </div>
                 </div>
-            </div>
 
-            {/* Email Input */}
-            <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-foreground">
-                Email
-                </Label>
-                <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
-                <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    className="pl-10 bg-background/50 border-primary/20 focus:border-primary/50 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground rounded-lg"
-                />
+                {/* Email Input */}
+                <div className="space-y-2">
+                    <Label htmlFor="email" className="text-sm font-medium text-foreground">
+                    Email
+                    </Label>
+                    <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                    <Input
+                        value={formInput.email}
+                        onChange={(event) => {
+                            setFormInput(prev => ({ 
+                                ...prev, 
+                                email: event.target.value
+                            }));
+                        }}
+                        id="email"
+                        type="email"
+                        placeholder="you@example.com"
+                        className="pl-10 bg-background/50 border-primary/20 focus:border-primary/50 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground rounded-lg"
+                    />
+                    </div>
                 </div>
-            </div>
 
-            {/* Password Input */}
-            <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-foreground">
-                Password
-                </Label>
-                <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
-                <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    className="pl-10 pr-10 bg-background/50 border-primary/20 focus:border-primary/50 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground rounded-lg"
-                />
-                <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                {/* Password Input */}
+                <div className="space-y-2">
+                    <Label htmlFor="password" className="text-sm font-medium text-foreground">
+                    Password
+                    </Label>
+                    <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                    <Input
+                        value={formInput.password}
+                        onChange={(event) => {
+                            setFormInput(prev => ({ 
+                                ...prev, 
+                                password: event.target.value
+                            }));
+                        }}
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        className="pl-10 pr-10 bg-background/50 border-primary/20 focus:border-primary/50 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground rounded-lg"
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                    </div>
+                </div>
+
+                {/* Confirm Password Input */}
+                <div className="space-y-2">
+                    <Label htmlFor="confirmPassword" className="text-sm font-medium text-foreground">
+                    Confirm Password
+                    </Label>
+                    <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                    <Input
+                        value={formInput.confirmPassword}
+                        onChange={(event) => {
+                            setFormInput(prev => ({ 
+                                ...prev, 
+                                confirmPassword: event.target.value
+                            }));
+                        }}
+                        id="confirmPassword"
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        className="pl-10 pr-10 bg-background/50 border-primary/20 focus:border-primary/50 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground rounded-lg"
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                    </div>
+                </div>
+
+                {/* Terms Checkbox */}
+                <div className="flex items-start gap-2 pt-2 mb-8">
+                    <Checkbox
+                    id="terms"
+                    checked={agreeTerms}
+                    onCheckedChange={setAgreeTerms}
+                    className="border-primary/30 text-primary mt-1"
+                    />
+                    <Label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer font-normal leading-tight">
+                    I agree to the Terms & Conditions
+                    </Label>
+                </div>
+                {/* Primary Button */}
+                <Button type="submit"
+                    className="w-full h-11 bg-gradient-to-r from-primary to-secondary hover:shadow-lg 
+                        hover:shadow-primary/50 text-white font-semibold rounded-lg transition-all mb-5 cursor-pointer"
                 >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-                </div>
-            </div>
-
-            {/* Confirm Password Input */}
-            <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-sm font-medium text-foreground">
-                Confirm Password
-                </Label>
-                <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
-                <Input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    className="pl-10 pr-10 bg-background/50 border-primary/20 focus:border-primary/50 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground rounded-lg"
-                />
-                <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                >
-                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-                </div>
-            </div>
-
-            {/* Terms Checkbox */}
-            <div className="flex items-start gap-2 pt-2">
-                <Checkbox
-                id="terms"
-                checked={agreeTerms}
-                onCheckedChange={setAgreeTerms}
-                className="border-primary/30 text-primary mt-1"
-                />
-                <Label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer font-normal leading-tight">
-                I agree to the Terms & Conditions
-                </Label>
-            </div>
+                    Sign Up
+                </Button>
             </form>
 
-            {/* Primary Button */}
-            <Button className="w-full h-11 bg-gradient-to-r from-primary to-secondary hover:shadow-lg hover:shadow-primary/50 text-white font-semibold rounded-lg transition-all mb-5">
-            Sign Up
-            </Button>
 
             {/* Divider */}
             <div className="flex items-center gap-3 mb-5">

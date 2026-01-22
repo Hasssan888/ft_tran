@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: rgb(158, 153, 153);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        
+        .content {
+            gap: 30px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* border: 5px solid white; */
+        }
+        
+        
+        .container {
+            background-color: aliceblue;
+            padding: 30px 40px;
+            display: flex;
+            gap: 20px;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+        }
+
+        .bg-scre {
+            border: 5px solid rgb(144, 140, 140);
+            background-color: aliceblue;
+            padding: 20px;
+            margin-bottom: 12px;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+        }
+        
+        .screen-color {
+            /* border: 5px solid white; */
+            width: 400px;
+            height: 180px;
+            /* border-radius: 5px; */
+            background-color: red;
+        }
+
+        .w-h {
+            width: 150px;
+            height: 100px;
+            /* border-radius: 5px; */
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .bor-der {
+            border: 5px solid black;
+        }
+
+        .w-h:hover {
+            transform: scale(1.2);
+        }
+        .red {
+            background-color: red;
+        
+        }
+        
+        .orange {
+            background-color: orange;
+        }
+        
+        .blue {
+            background-color: blue;
+        }
+        
+        .green {
+            background-color: green;
+            
+        }
+        </style>
+</head>
+<body>
+
+    <div class="content">
+        <div class="bg-scre">
+            <div class="screen-color"></div>
+        </div>
+        <div class="container">
+            <div data-color="red" class="red w-h"></div>
+            <div data-color="green" class="green w-h"></div>
+            <div data-color="blue" class="blue w-h"></div>
+            <div data-color="orange" class="orange w-h"></div>
+        </div>
+    </div>
+
+    <script>
+        
+
+        let cardColor = document.querySelectorAll('.w-h');
+        let screnShow = document.querySelector('.screen-color');
+
+        // console.log(cardColor);
+
+        const savedColor = localStorage.getItem('selectedColor');
+
+        if (savedColor) {
+            screnShow.style.backgroundColor = savedColor;
+
+        }
+
+        cardColor.forEach((card) => {
+            card.addEventListener("click", () => {
+                card.classList.add('bor-der')
+                const color = card.dataset.color;
+                
+                screnShow.style.backgroundColor = color;
+                document.querySelector('.bg-scre').style.borderColor = color;
+
+                localStorage.setItem('selectedColor', color);
+
+            })
+
+        })
+
+    </script>
+    
+</body>
+</html>

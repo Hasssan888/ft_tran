@@ -7,10 +7,49 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff, Mail, Lock } from "lucide-react"
+import { fromTheme } from "tailwind-merge"
+import { useRouter } from "next/navigation"
+
+
+const MOCK_USER = {
+    email: "user@example.com",
+    password: "12345678"
+}
+
+type Param = {
+    email: string,
+    password: string
+}
 
 export default function LoginForm() {
     const [showPassword, setShowPassword] = useState(false)
     const [rememberMe, setRememberMe] = useState(false)
+    const [formInput, setFormInput] = useState<Param>({email: "", password: ""});
+    const router = useRouter();
+
+    function handleCheck() {
+        if (!rememberMe)
+            setRememberMe(true);
+        else
+            setRememberMe(false);
+    }
+
+    const handleLogin = (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        if (!formInput.email || !formInput.password) {
+            alert("Please fill all fields")
+            return;
+        }
+
+        // Simulate backend login
+        if (formInput.email === MOCK_USER.email && formInput.password === MOCK_USER.password) {
+            // Redirect to dashboard
+            router.push("/dashboard");
+        } else {
+            alert("Invalid email or password");
+        }
+    }
 
     return (
         <div className="w-full max-w-md">
@@ -34,72 +73,93 @@ export default function LoginForm() {
             <div className="mb-8">
             <h2 className="text-2xl font-bold text-foreground mb-2">Welcome Back</h2>
             <p className="text-sm text-muted-foreground">Login to continue your game</p>
-            </div>
+        </div>
 
             {/* Form Inputs */}
-            <form className="space-y-5 mb-8">
-            {/* Email Input */}
-            <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-foreground">
-                Email
-                </Label>
-                <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
-                <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    className="pl-10 bg-background/50 border-primary/20 focus:border-primary/50 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground rounded-lg"
-                />
+            <form 
+                onSubmit={handleLogin}
+                className="space-y-5 mb-8">
+                {/* Email Input */}
+                <div className="space-y-2">
+                    <Label htmlFor="email" className="text-sm font-medium text-foreground">
+                    Email
+                    </Label>
+                    <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                    <Input
+                        value={formInput.email}
+                        onChange={(e) => {
+                            setFormInput(prev => ({
+                                ...prev,
+                                email: e.target.value
+                            }))
+                        }}
+                        id="email"
+                        type="email"
+                        placeholder="you@example.com"
+                        className="pl-10 bg-background/50 border-primary/20 focus:border-primary/50 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground rounded-lg"
+                    />
+                    </div>
                 </div>
-            </div>
 
-            {/* Password Input */}
-            <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-foreground">
-                Password
-                </Label>
-                <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
-                <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    className="pl-10 pr-10 bg-background/50 border-primary/20 focus:border-primary/50 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground rounded-lg"
-                />
-                <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                {/* Password Input */}
+                <div className="space-y-2">
+                    <Label htmlFor="password" className="text-sm font-medium text-foreground">
+                    Password
+                    </Label>
+                    <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground pointer-events-none" />
+                    <Input
+                        value={formInput.password}
+                        onChange={(e) => {
+                            setFormInput(prev => ({
+                                ...prev,
+                                password: e.target.value
+                            }))
+                        }}
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        className="pl-10 pr-10 bg-background/50 border-primary/20 focus:border-primary/50 focus:ring-primary/20 text-foreground placeholder:text-muted-foreground rounded-lg"
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                    </div>
+                </div>
+
+                {/* Remember Me & Forgot Password */}
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                    <Checkbox
+                        onClick={handleCheck}
+                        id="remember"
+                        checked={rememberMe}
+                        onCheckedChange={setRememberMe}
+                        className="border-primary/30 text-primary"
+                    />
+                    <Label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer font-normal">
+                        Remember me
+                    </Label>
+                    </div>
+                    <Link href="#" className="text-sm text-primary hover:text-primary/80 transition-colors">
+                    Forgot password?
+                    </Link>
+                </div>
+                {/* Primary Button */}
+                <Button type="submit"
+                    className="w-full h-11 bg-gradient-to-r from-primary to-secondary 
+                        hover:shadow-lg hover:shadow-primary/50 text-white font-semibold 
+                        rounded-lg transition-all cursor-pointer"
                 >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-                </div>
-            </div>
-
-            {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                <Checkbox
-                    id="remember"
-                    checked={rememberMe}
-                    onCheckedChange={setRememberMe}
-                    className="border-primary/30 text-primary"
-                />
-                <Label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer font-normal">
-                    Remember me
-                </Label>
-                </div>
-                <Link href="#" className="text-sm text-primary hover:text-primary/80 transition-colors">
-                Forgot password?
-                </Link>
-            </div>
+                    Login
+                </Button>
             </form>
 
-            {/* Primary Button */}
-            <Button className="w-full h-11 bg-gradient-to-r from-primary to-secondary hover:shadow-lg hover:shadow-primary/50 text-white font-semibold rounded-lg transition-all mb-5">
-            Login
-            </Button>
 
             {/* Divider */}
             <div className="flex items-center gap-3 mb-5">

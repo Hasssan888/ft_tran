@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 type SignupFormData = {
     userName: string;
@@ -25,130 +26,81 @@ export default function SignupForm() {
         password: "", 
         confirmPassword:"",
     });
+    
+    const router = useRouter();
+    
+    function handleCheck() {
+        if (!agreeTerms)
+            setAgreeTerms(true);
+        else
+            setAgreeTerms(false);
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-
-        // Validation simple (optional)
-        if (!formInput.userName || !formInput.email || 
-                !formInput.password || !formInput.confirmPassword) {
-                    console.warn("Please fill all fields!");
-                    return;
-        }
-
-        if (formInput.password !== formInput.confirmPassword) {
-            console.warn("Password do not match!");
+        // Frontend validation
+        if (!agreeTerms) {
+            alert("You must agree to the Terms & Conditions");
             return;
         }
 
-        if (!agreeTerms) {
-            console.warn("You must agree to the terms!");
+        if (!formInput.userName || !formInput.email ||
+            !formInput.password || !formInput.confirmPassword) {
+                alert("Palease fill all fields");
+                return;
+        }
+
+        if (formInput.password !== formInput.confirmPassword) {
+            alert("Passwords do not match");
             return;
         }
 
         try {
-            // Frontend-ready fetch call
-            const res = await fetch("/api/signup", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    name: formInput.userName,
-                    email: formInput.email,
-                    password: formInput.password,
-                }),
-            });
-            
-            if (!res.ok) {
-                console.error("Error:", res.status);
-                return;
+                const res = await fetch("/api/auth/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        username: formInput.userName,
+                        email: formInput.email,
+                        password: formInput.password,
+                    }),
+                });
+
+                const data = await res.json();
+                console.log("Response from backend:", data);
+
+                if (!res.ok) {
+                    // Handle error from backend
+                    console.error("Backend error:", data);
+                    alert(data.message || "Signup failed");
+                    return;
+                }
+
+                // Success
+                console.log("Response from backend:", data);
+                alert("Account created successfully!");
+
+                // Rest from
+                setFormInput({ 
+                    userName: "", 
+                    email: "" ,
+                    password: "",
+                    confirmPassword: ""
+                });
+                // setAgreeTerms(false);
+                setShowPassword(false);
+                setShowConfirmPassword(false);
+
+                // Redirect to login page
+                router.push("/login");
+
+
+            } catch (error) {
+                console.error("Server error:", error);
+                alert("Server error Please try again later.");
             }
-    
-            const data = await res.json().catch(() => ({
-                message: "Signup simulated",
-                data: { name: formInput.userName, email: formInput.email },
-            }));
-
-            console.log("API Response:", data);
-
-            // Success feedback (frintend only);
-            alert(`Signup successful! Welcome ${data.data.name}`);
-            // Reset form
-            setFormInput({
-                userName: "",
-                email: "",
-                password: "",
-                confirmPassword: "",
-            });
-            setAgreeTerms(false);
-            setShowPassword(false);
-            setShowConfirmPassword(false);
-
-        } catch (err) {
-            console.error("Signup failed:", err);
-        }
     };
-
-
-    // const handleSubmit = async (e: React.FormEvent) => {
-    //     e.preventDefault();
-    //     console.log(formInput);
-
-    //     // Basic frontend validation
-    //     if (!agreeTerms) {
-    //         alert("You must agree to the Terms & Conditions");
-    //         return;
-    //     }
-
-    //     if (formInput.password !== formInput.confirmPassword) {
-    //         alert("Passwords do not match");
-    //         return;
-    //     }
-
-    //     if (!formInput.userName || !formInput.email || !formInput.password) {
-    //         alert("All fields are required");
-    //         return;
-    //     }
-
-    //     try {
-    //         // Send data to backend API
-    //         const res = await fetch("/api/signup", {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({
-    //                 userName: formInput.userName,
-    //                 email: formInput.email,
-    //                 password: formInput.password,
-    //             }),
-    //         });
-
-    //         const data = await res.json();
-
-    //         // Handle backend errors
-    //         if (!res.ok) {
-    //             alert(data.message || "Signup failed");
-    //             return;
-    //         }
-
-    //         // Success
-    //         alert("Account created successfully 🎉");
-
-    //         // Optional: clear form
-    //         setFormInput({
-    //             userName: "",
-    //             email: "",
-    //             password: "",
-    //             confirmPassword: "",
-    //         });
-
-    //         setAgreeTerms(false);
-    //     } catch (error) {
-    //         alert("Something went wrong. Please try again.");
-    //         console.error(error);
-    //     }
-    // };
     
     return (
         <div className="w-full max-w-md">
@@ -283,12 +235,13 @@ export default function SignupForm() {
                 </div>
 
                 {/* Terms Checkbox */}
-                <div className="flex items-start gap-2 pt-2 mb-8">
+                <div className="flex items-start gap-2 pt-2 mb-8 cursor-pointer">
                     <Checkbox
+                    onClick={handleCheck}
                     id="terms"
                     checked={agreeTerms}
-                    onCheckedChange={setAgreeTerms}
-                    className="border-primary/30 text-primary mt-1"
+                    onCheckedChange={(checked) => setAgreeTerms(Boolean(checked))}
+                    className="border-primary/30 text-primary mt-1 cursor-pointer"
                     />
                     <Label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer font-normal leading-tight">
                     I agree to the Terms & Conditions

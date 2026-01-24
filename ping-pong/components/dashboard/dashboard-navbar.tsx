@@ -1,6 +1,7 @@
 "use client"
 
-import { Menu, Search, Bell, MessageSquare, LogOut, User as UserIcon, Settings as SettingsIcon, BarChart3 } from "lucide-react"
+import { Menu, Search, Bell, MessageSquare, LogOut, User as UserIcon, Settings as SettingsIcon, BarChart3, Slice } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 interface DashboardNavbarProps {
@@ -61,6 +62,12 @@ return (
 export default function DashboardNavbar({ onToggleSidebar, sidebarExpanded }: DashboardNavbarProps) {
 const [searchFocused, setSearchFocused] = useState(false)
 const [dropdownOpen, setDropdownOpen] = useState(false)
+
+const router = useRouter()
+// Gett info from localStorge
+const userName = JSON.parse(localStorage.getItem("user"));
+
+const logoName = userName.username.slice(0,2).toUpperCase();
 
 return (
     <header 
@@ -127,16 +134,19 @@ return (
         <DropdownMenu>
         <DropdownMenuTrigger onClick={() => setDropdownOpen(!dropdownOpen)}>
             <button className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-foreground font-semibold hover:shadow-lg hover:shadow-primary/25 transition-all duration-200 hover:scale-105 active:scale-95">
-            JD
+            {logoName}
             </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent isOpen={dropdownOpen}>
             <div className="px-3 py-2 border-b border-border/50">
-            <p className="text-sm font-medium text-foreground">John Doe</p>
-            <p className="text-xs text-muted-foreground">john@example.com</p>
+            <p className="text-sm font-medium text-foreground">{userName.username}</p>
+            <p className="text-xs text-muted-foreground">{userName.email}</p>
             </div>
-            <DropdownMenuItem onClick={() => setDropdownOpen(false)}>
-            <UserIcon className="w-4 h-4 mr-2" />
+            <DropdownMenuItem onClick={() => {
+                setDropdownOpen(false)
+                router.push("/profile")
+            }}>
+            <UserIcon  className="w-4 h-4 mr-2" />
             Profile
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setDropdownOpen(false)}>

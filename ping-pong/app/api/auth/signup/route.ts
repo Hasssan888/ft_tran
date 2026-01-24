@@ -1,11 +1,42 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from "next/server"
+import { users } from "@/lib/mock-db"
 
 export async function POST(req: Request) {
-    const body = await req.json();
+  const { email, password, username } = await req.json()
 
-    console.log("Received data:", body);
+  if (!email || !password || !username) {
+    return NextResponse.json(
+      { message: "Missing fields" },
+      { status: 400 }
+    )
+  }
 
-    return NextResponse.json({
-        message: "User created (fake)",
-    })
+  // check if user exists
+  const exists = users.find((u) => u.email === email)
+  if (exists) {
+    return NextResponse.json(
+      { message: "User already exists" },
+      { status: 409 }
+    )
+  }
+
+  const newUser = {
+    id: users.length + 1,
+    email,
+    password,
+    username
+  }
+
+  users.push(newUser)
+
+  console.log("🆕 Users DB:", users)
+
+  return NextResponse.json({
+    message: "Account created successfully",
+    user: {
+      id: newUser.id,
+      email: newUser.email,
+      username: newUser.username
+    }
+  })
 }

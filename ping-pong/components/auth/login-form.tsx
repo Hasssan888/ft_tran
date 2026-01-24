@@ -7,14 +7,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff, Mail, Lock } from "lucide-react"
-import { fromTheme } from "tailwind-merge"
 import { useRouter } from "next/navigation"
 
-
-const MOCK_USER = {
-    email: "user@example.com",
-    password: "12345678"
-}
 
 type Param = {
     email: string,
@@ -34,7 +28,7 @@ export default function LoginForm() {
             setRememberMe(false);
     }
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         
         if (!formInput.email || !formInput.password) {
@@ -42,12 +36,25 @@ export default function LoginForm() {
             return;
         }
 
-        // Simulate backend login
-        if (formInput.email === MOCK_USER.email && formInput.password === MOCK_USER.password) {
-            // Redirect to dashboard
+        try {
+            const res = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formInput)
+            })
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert(data.message)
+                return
+            }
+
+            alert("Login successful");
+            console.log("User:", data.user)
             router.push("/dashboard");
-        } else {
-            alert("Invalid email or password");
+        } catch (err) {
+            alert(`Server error ${err}`);
         }
     }
 

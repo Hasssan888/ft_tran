@@ -39,6 +39,8 @@ export default function SignupForm() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        console.log("📤 Sending data:", formInput);
+
         // Frontend validation
         if (!agreeTerms) {
             alert("You must agree to the Terms & Conditions");
@@ -57,7 +59,7 @@ export default function SignupForm() {
         }
 
         try {
-                const res = await fetch("/api/auth/signup", {
+                const res = await fetch("api/auth/signup", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -68,6 +70,7 @@ export default function SignupForm() {
                 });
 
                 const data = await res.json();
+                localStorage.setItem("user", JSON.stringify(data.user));
                 console.log("Response from backend:", data);
 
                 if (!res.ok) {

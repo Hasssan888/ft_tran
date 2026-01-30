@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]  // I Add this to download need dep, cause i faced a problem in docker devlopment cause in my machine i am using debian and in docker alpine, dependecies conflict
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String   @unique
+  password  String              // ← FROM AUTH
+  roles     String[] @default(["user"])  // ← FROM AUTH
+  
+  // Game stats 
+  rating    Int      @default(1000)
+  wins      Int      @default(0)
+  losses    Int      @default(0)
+  
+  // Auth 
+  twoFactorEnabled Boolean @default(false)
+  twoFactorSecret String?
+  
+  // Relations
+  profile   Profile?             // ← FROM AUTH
+  matchesAsP1 Match[] @relation("Player1")  
+  matchesAsP2 Match[] @relation("Player2")
+  wonMatches  Match[] @relation("Winner")
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Profile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  displayName String?
+  avatarUrl   String?
+  status      String   @default("offline")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Match {
+  id        String   @id @default(uuid())
+
+  // Game Data
+  scoreLeft  Int
+  scoreRight Int
+
+  // Player 1 (Left)
+  player1    User    @relation("Player1", fields: [player1Id], references: [id])
+  player1Id  String
+
+  // Player 2 (Right)
+  player2    User    @relation("Player2", fields: [player2Id], references: [id])
+  player2Id  String
+
+  // Winner
+  winner     User?   @relation("Winner", fields: [winnerId], references: [id])
+  winnerId   String?
+}

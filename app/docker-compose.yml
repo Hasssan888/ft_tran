@@ -1,0 +1,74 @@
+services:
+  # The Database Service
+  db:
+    image: postgres:15-alpine
+    container_name: db
+    restart: always
+    env_file:
+      - ./backend/.env
+    networks:
+      - my_trans
+    ports:
+      - 5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    # healthcheck:
+    #   test: [ "CMD-SHELL", "pg_isready -U p"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 5
+
+# Backend service
+  backend:
+    build: ./backend
+    container_name: backend
+    restart: always
+    env_file:
+      - ./backend/.env
+    networks:
+      - my_trans
+    ports:
+      - 4000
+    depends_on:
+      - db
+
+
+# Frontend service
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    restart: always
+    networks:
+      - my_trans
+    ports:
+      - 3000
+    depends_on:
+      - backend  
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - my_trans
+    depends_on:
+      - frontend
+      - backend
+
+
+volumes:
+  db_data:
+
+
+networks:
+  my_trans:
+    driver: bridge
+
+
+
+
+
+

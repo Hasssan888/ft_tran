@@ -1,0 +1,16 @@
+services:
+  backend:
+    command: sh -c "npm ci && npm run build && npm run start:dev"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules  # Use container's node_modules (will be dev deps after npm ci)
+    environment:
+      - NODE_ENV=development
+
+  frontend:
+    command: sh -c "npm ci && npm run dev"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
